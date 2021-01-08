@@ -1,0 +1,201 @@
+{
+  "version": 3,
+  "setup": {
+    "blender_install_path": "<args:0>"
+  },
+  "modules": [
+    {
+      "module": "main.Initializer",
+      "config":{
+        "global": {
+          "output_dir": "<args:1>",
+          "output_is_temp": False,
+          "intrinsics": {
+            "resolution_x": 128,
+            "resolution_y": 128,
+        },
+          "number_of_samples": "<args:3>"
+        }
+      }
+    },
+    {
+      "module": "loader.BlendLoader",
+      "config": {
+        "path": "<args:2>",
+        "load_from": "/Collection",
+        "entities": "Collection"
+      }
+    },
+    {
+      "module": "manipulators.WorldManipulator",
+      "config": {
+        "cf_bg_surface_color": [0.051, 0.051, 0.051, 1],
+        "cf_bg_surface_strength": 1
+      }
+    },
+
+    # Set the skin color of the arm to a random value from a
+    # selection of colors.
+    {
+      "module": "materials.MaterialColorSampler",
+      "config": {
+        "selector": {
+          "provider": "getter.Material",
+          "conditions": {
+            "name": "Material.001"
+          }
+        },
+        "color": {
+          "provider": "sampler.HexColor",
+          "options": [
+            "#ffcba3",
+            "#e8b894",
+            "#d8905f",
+            "#c28155",
+            "#7b4934",
+            "#88513a",
+            "#733e26",
+            "#8d5524",
+            "#c68642",
+            "#e0ac69",
+            "#f1c27d",
+            "#ffdbac",
+            "#f6d3bd",
+            "#eac2b0",
+            "#e7c1b2",
+            "#e2a898"
+          ]
+        }
+      }
+    },
+
+    # Change custom properties that drive the arm's movement.
+    #
+    # Sampled between 0 and 1, in the .blend files these values are used to change
+    # the pose of the armature.
+    {
+      "module": "manipulators.EntityCustomPropertySampler",
+      "config": {
+        "selector": {
+          "provider": "getter.Entity",
+          "conditions": [
+          {
+            "name": 'Armature.*'
+          }
+          ]
+        },
+        "open": {
+          "provider": "sampler.Value",
+          "type": "float",
+          "min": 0,
+          "max": 1
+        },
+        "wrist": {
+          "provider": "sampler.Value",
+          "type": "float",
+          "min": 0,
+          "max": 1
+        },
+        "rot": {
+          "provider": "sampler.Value",
+          "type": "float",
+          "min": 0,
+          "max": 1
+        },
+        "elbow": {
+          "provider": "sampler.Value",
+          "type": "float",
+          "min": 0,
+          "max": 1
+        },
+        "deviation": {
+          "provider": "sampler.Value",
+          "type": "float",
+          "min": 0,
+          "max": 1
+        }
+      }
+    },
+
+    # Two lights of variable position are used
+    {
+      "module": "lighting.LightLoader",
+      "config": {
+        "lights": [
+        {
+          "type": "POINT",
+          "location": {
+            "provider":"sampler.Sphere",
+            "center": [0, 0, 0],
+            "radius": 5,
+            "mode": "SURFACE"
+          },
+          "energy": 200
+        }
+        ]
+      }
+    },
+    {
+      "module": "lighting.LightLoader",
+      "config": {
+        "lights": [
+        {
+          "type": "POINT",
+          "location": {
+            "provider":"sampler.Sphere",
+            "center": [0, 0, 0],
+            "radius": 5,
+            "mode": "SURFACE"
+          },
+          "energy": 100
+        }
+        ]
+      }
+    },
+
+    # The camera is orbiting around the origin.
+    {
+      "module": "camera.CameraSampler",
+      "config": {
+        "cam_poses": [
+        {
+          "location": {
+            "provider":"sampler.Sphere",
+            "center": [0, 0, 0],
+            "radius": 0.5,
+            "mode": "SURFACE"
+          },
+          "rotation": {
+            "format": "look_at",
+            "value": [0, 0, 0]
+          }
+        }
+        ]
+      }
+    },
+    {
+      "module": "renderer.RenderFilePathOverwriter",
+      "config": {
+        "entity": "Armature",
+        "property": "open"
+      }
+    },
+
+    # The camera must be shifted in order for the tracker to be at the center of the image.
+    {
+      "module": "camera.CameraOffset",
+      "config": {
+        "target": "Tracker"
+      }
+    },
+    {
+      "module": "renderer.RgbRenderer",
+      "config": {
+        "output_key": "colors",
+        "transparent_background": True,
+        "use_alpha": True,
+        "use_mist_distance": False
+      }
+    }
+  ]
+}

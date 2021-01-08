@@ -1,0 +1,98 @@
+#-------------------------------------------------------------------#
+# This is a template for the configuration file required in the     #
+# generation process. It is used by the Blenderproc pipeline.       #
+# Here is the official documentation:                               #
+# https://dlr-rm.github.io/BlenderProc/index.html                   #
+#                                                                   #
+# This template contains all modules and specific arguments that    #
+# are required.                                                     #
+# You can add more modules to modify the rendering.                 #
+#                                                                   #
+# Important: replace ENTITY_NAME and PROPERTY_NAME                  #
+#-------------------------------------------------------------------#
+
+{
+  "version": 3,
+  "setup": {
+    "blender_install_path": "<args:0>"
+  },
+  "modules": [
+    {
+      "module": "main.Initializer",
+      "config":{
+        "global": {
+          "output_dir": "<args:1>",
+          "output_is_temp": False,
+          "intrinsics": {
+            "resolution_x": 128,
+            "resolution_y": 128,
+        },
+          "number_of_samples": "<args:3>"
+        }
+      }
+    },
+    {
+      "module": "loader.BlendLoader",
+      "config": {
+        "path": "<args:2>",
+        "load_from": "/Collection",
+        "entities": "Collection"
+      }
+    },
+
+    #------------------------------#
+    # Add modules for lighting and #
+    # other manipulation here      #
+    #------------------------------#
+
+    # This module will set the property "PROPERTY_NAME" of the entity "ENTITY_NAME" to a
+    # random value between 0 and 1
+    {
+      "module": "manipulators.EntityCustomPropertySampler",
+      "config": {
+        "selector": {
+          "provider": "getter.Entity",
+          "conditions": [
+          {
+            "name": 'ENTITY_NAME'         # The name of the entity
+          }
+          ]
+        },
+        "PROPERTY_NAME": {                # The name of the custom property to be set
+          "provider": "sampler.Value",
+          "type": "float",
+          "min": 0,
+          "max": 1
+        }
+      }
+    },
+
+    # It is necessary to have a CameraSampler
+    # Look at the example config or the official documentation
+    # on camera sampling works.
+    {
+      "module": "camera.CameraSampler",
+      "config": {
+        # TODO: configure
+      }
+    },
+
+    # This is required to get the correct image naming.
+    {
+      "module": "renderer.RenderFilePathOverwriter",
+      "config": {
+        "entity": "ENTITY_NAME",
+        "property": "PROPERTY_NAME"
+      }
+    },
+    {
+      "module": "renderer.RgbRenderer",
+      "config": {
+        "output_key": "colors",
+        "transparent_background": True,
+        "use_alpha": True,
+        "use_mist_distance": False
+      }
+    }
+  ]
+}
