@@ -28,12 +28,12 @@ $ source env/bin/activate
 ```
 
 Then install the package with pip from this repo using:
-`$ pip install -e git+ssh://git@gitlab.com/SchenzelGeorg/hand-pose-detection.git@Development#egg=handposedetection`
+`$ pip install -e git+https://github.com/GeorgSchenzel/pose-detector.git#egg=pose-detector`
 The project must be installed in editable mode.
 
 Alternatively, you can clone this repo and directrly install it with pip:
 ```
-$ git clone XX
+$ git clone https://github.com/GeorgSchenzel/pose-detector.git
 $ cd pose-detector
 $ pip install -e .
 ```
@@ -74,7 +74,7 @@ optional arguments:
 ```
 
 #### Config
-The Blenderproc pipeline is used to simplify and speed up the rendering process in Blender. A config file for this tool must be provided. [Here](https://dlr-rm.github.io/BlenderProc/index.html) you can read more about its requirements. This tool needs some specific Blenderproc modules to achieve the correct output for further processing. It is highly recommended to use the provided config template file `resources/template.yaml`.
+The Blenderproc pipeline is used to simplify and speed up the rendering process in Blender. A config file for this tool must be provided. [Here](https://dlr-rm.github.io/BlenderProc/index.html) you can read more about its requirements. This tool needs some specific Blenderproc modules to achieve the correct output for further processing. It is highly recommended to use the provided [config template file](https://github.com/GeorgSchenzel/pose-detector/blob/master/resources/template.yaml).
 
 By adding modules to the config you can modify the rendered images in any way you want.
 
@@ -245,4 +245,4 @@ This software uses the following resources:
 - ["FPS Arms with Advanced Rig"](https://sketchfab.com/3d-models/fps-arms-with-advanced-rig-81706ab4fce644c69fa486de2c6e4953) by [aidanp](https://sketchfab.com/bionic_leaf) is licensed under CC [BY 4.0](https://creativecommons.org/licenses/by/4.0/)
 
 ## License
-[MIT]()
+[MIT](https://github.com/GeorgSchenzel/pose-detector/blob/master/LICENCE)
