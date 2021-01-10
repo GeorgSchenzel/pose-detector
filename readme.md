@@ -1,4 +1,4 @@
-# Pose Detection
+# Pose Detector
 A tool for synthetic dataset generation and pose detection using deep learning. This tool was created as a project for my bachelors thesis, where I generate images of arms in various poses and train a model on detecting the finger positions for an VR application.
 
 ##### Table of Contents
@@ -12,7 +12,7 @@ A tool for synthetic dataset generation and pose detection using deep learning. 
 
 ## Features
 - Synthetic Dataset Generation  
-Allows for high variability in generated datasets. Allows for randomization of  Models, Backgrounds, Poses, Lighting, Camera positions, materials and more.
+Allows for a high variability in generated datasets by randomizing chosen 3d models, backgrounds, poses, lighting, camera positions, materials and more.
 
 - Model training  
 Using transfer learning and a generated dataset, a convolutional neural network can be trained to detect an objects pose or any property in a 3d model.
@@ -21,7 +21,7 @@ Using transfer learning and a generated dataset, a convolutional neural network 
 Utility scripts for easy serving and benchmarking.
 
 ## Installation
-Installation can be done with pip. Optionally a virtual pip environment can be setup with:
+Installation can be done with pip. Optionally a virtual pip environment can be set up with:
 ```
 $ python -m venv env
 $ source env/bin/activate
@@ -31,7 +31,7 @@ Then install the package with pip from this repo using:
 `$ pip install -e git+https://github.com/GeorgSchenzel/pose-detector.git#egg=pose-detector`
 The project must be installed in editable mode.
 
-Alternatively, you can clone this repo and directrly install it with pip:
+Alternatively, you can clone this repo and directly install it with pip:
 ```
 $ git clone https://github.com/GeorgSchenzel/pose-detector.git
 $ cd pose-detector
@@ -79,7 +79,7 @@ The Blenderproc pipeline is used to simplify and speed up the rendering process 
 By adding modules to the config you can modify the rendered images in any way you want.
 
 #### Custom Modules
-These modules are added to circumvent some of Blenderproc's shortcomings. The problem is that most modules run only once per batch of rendered images. Most of the following modules run once per rendered image which allow for easier and faster rendering.
+These modules are added to circumvent some of Blenderproc's shortcomings. The problem is that most modules run only once per batch of rendered images. Most of the following modules run once per rendered image which allows for easier and faster rendering.
 
 **CameraOffset**
 Centers the camera to an object's origin. The centering is done by offsetting the camera each frame after the keyframing happens, so this can be used in parallel with one of the default camera samplers.
@@ -163,7 +163,7 @@ optional arguments:
 ```
 
 ## Example: Finger Pose Detection for VR
-This section entails the usage of this tool for detecting the finger pose on an arm in different poses. The purpose of the generated model is the usage in an VR application, so the arm model has an HTC Vive tracking device on the wrist and an image of the target environment is used as the background.
+This section entails the usage of this tool for detecting the finger pose on an arm in different poses. The purpose of the generated model is the usage in a VR application, so the arm model has an HTC Vive tracking device on the wrist and an image of the target environment is used as the background.
 
 ### Dataset
 #### 3d Model in Blender
@@ -174,7 +174,7 @@ The model is stitched together from two different models. Using an armature the 
 - wrist adduction/abduction
 - elbow flexion/extension
 
-Different poses are achieved by setting custom properties on the armature, these properties then drive the bones' orientation. For example setting the `open` property to 0 will rotate all finger bones inward to simulate making a fist.
+Different poses are achieved by setting custom properties on the armature, these properties then drive the bones' orientation. For example, setting the `open` property to 0 will rotate all finger bones inward to simulate making a fist.
 
 #### Rendering and Processing
 ![](examples/arm/dataset_sample.png)
@@ -189,10 +189,10 @@ To increase the robustness of the final neural network model, the following addi
 After rendering the following processing steps happen to further increase the dataset variability:
 - image rotation
 - image flipping (the 3d model is only of a left arm, by flipping the image we get a right arm)
-- overlay over cropped background
+- overlay over a cropped background
 
 ### Training
-The training utilises transfer learning to speed up training times and the neural network is based on a existing NN with added layers to reduce the output to a single value. The important metrics are the reduction of the mean squared error (mse) and having a low prediction latency to allow for real time performance. The labels have a range of 0 to 100, representing a percentage of how much the hand is opened. Thus an error represents how many percentage points the prediction is off from the true value.
+The training utilizes transfer learning to speed up training times and the neural network is based on an existing NN with added layers to reduce the output to a single value. The important metrics are the reduction of the mean squared error (mse) and having a low prediction latency to allow for real-time performance. The labels have a range of 0 to 100, representing a percentage of how much the hand is opened. Thus an error represents how many percentage points the prediction is off from the true value.
 
 The best results were achieved by using the `resnet18` pretrained on `imagenet` with all convolutional layers set as trainable. Two dense layers are added, one with 256 neurons and one with a single neuron producing the final output. A 25% dropout layer is used to reduce overfitting. Below is a summary of the neural network:
 
@@ -222,9 +222,9 @@ Using different base networks than `resnet18`, like `resnet34`, `vgg16` or `mobi
 ### Results
 The final network was trained with a generated dataset of 200 000 images in 20 epochs.
 Evaluating the 40 000 images of the validation dataset, we get a mean squared error of 12.25 and a mean error of 2.09. This means that on average the prediction is only off by about 2.09 percentage point. Below is a histogram showing all errors that occurred. This shows that there is no noticeable amount of outliers with large errors.
-Benchmarks using a RTX 2080 results in about 7.1ms to predict a single image. This equals to a performance of about 141 fps, disregarding any other overhead.
+Benchmarks using an RTX 2080 results in about 7.1ms to predict a single image. This equals to a performance of about 141 fps, disregarding any other overhead.
 
-This histogram showing all errors when evaluating:
+Histogram showing all errors when evaluating the trained network:
 ![](examples/arm/histogram.png)
 
 All resources used are in the `examples/arm` subdirectory. Results can be reproduced using these commands:
